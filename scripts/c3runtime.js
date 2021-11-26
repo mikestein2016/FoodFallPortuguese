@@ -3540,6 +3540,47 @@ async ClearStorage(){try{await this._storage.clear();await this.ScheduleTriggers
 }
 
 {
+'use strict';const C3=self.C3;C3.Plugins.PlatformInfo=class PlatformInfoPlugin extends C3.SDKPluginBase{constructor(opts){super(opts)}Release(){super.Release()}};
+
+}
+
+{
+'use strict';const C3=self.C3;C3.Plugins.PlatformInfo.Type=class PlatformInfoType extends C3.SDKTypeBase{constructor(objectClass){super(objectClass)}Release(){super.Release()}OnCreate(){}};
+
+}
+
+{
+'use strict';const C3=self.C3;const DOM_COMPONENT_ID="platform-info";
+C3.Plugins.PlatformInfo.Instance=class PlatformInfoInstance extends C3.SDKInstanceBase{constructor(inst,properties){super(inst,DOM_COMPONENT_ID);this._screenWidth=0;this._screenHeight=0;this._windowOuterWidth=0;this._windowOuterHeight=0;this._safeAreaInset=[0,0,0,0];this._supportsWakeLock=false;this._isWakeLockActive=false;this.AddDOMMessageHandlers([["window-resize",e=>this._OnWindowResize(e)],["wake-lock-acquired",e=>this._OnWakeLockAcquired(e)],["wake-lock-error",e=>this._OnWakeLockError(e)],["wake-lock-released",
+e=>this._OnWakeLockReleased(e)]]);if(navigator.connection)navigator.connection.addEventListener("change",()=>this._OnNetworkChange());this._runtime.AddLoadPromise(this.PostToDOMAsync("get-initial-state").then(data=>{this._screenWidth=data["screenWidth"];this._screenHeight=data["screenHeight"];this._windowOuterWidth=data["windowOuterWidth"];this._windowOuterHeight=data["windowOuterHeight"];this._safeAreaInset=data["safeAreaInset"];this._supportsWakeLock=data["supportsWakeLock"]}))}Release(){super.Release()}_OnWindowResize(e){this._windowOuterWidth=
+e["windowOuterWidth"];this._windowOuterHeight=e["windowOuterHeight"];this._safeAreaInset=e["safeAreaInset"]}async _OnNetworkChange(){await this.TriggerAsync(C3.Plugins.PlatformInfo.Cnds.OnNetworkChange)}async _OnWakeLockAcquired(){this._isWakeLockActive=true;await this.TriggerAsync(C3.Plugins.PlatformInfo.Cnds.OnWakeLockAcquired)}async _OnWakeLockError(){this._isWakeLockActive=false;await this.TriggerAsync(C3.Plugins.PlatformInfo.Cnds.OnWakeLockError)}async _OnWakeLockReleased(){this._isWakeLockActive=
+false;await this.TriggerAsync(C3.Plugins.PlatformInfo.Cnds.OnWakeLockReleased)}};
+
+}
+
+{
+'use strict';const C3=self.C3;
+C3.Plugins.PlatformInfo.Cnds={IsOnMobile(){return C3.Platform.IsMobile},IsOnWindows(){return C3.Platform.OS==="Windows"},IsOnMacOS(){return C3.Platform.OS==="Mac OS X"},IsOnLinux(){return C3.Platform.OS==="Linux"},IsOnChromeOS(){return C3.Platform.OS==="Chrome OS"},IsOnAndroid(){return C3.Platform.OS==="Android"},IsOniOS(){return C3.Platform.OS==="iOS"},IsWebExport(){const exportType=this._runtime.GetExportType();return exportType==="html5"||exportType==="scirra-arcade"||exportType==="preview"||exportType===
+"instant-games"},IsCordovaExport(){return this._runtime.IsCordova()},IsNWjsExport(){return this._runtime.GetExportType()==="nwjs"},IsWindowsUWPExport(){return this._runtime.GetExportType()==="windows-uwp"},IsWindowsWebView2Export(){return this._runtime.GetExportType()==="windows-webview2"},IsMacOSWKWebView2Export(){return this._runtime.GetExportType()==="macos-wkwebview"},OnNetworkChange(){return true},OnWakeLockAcquired(){return true},OnWakeLockError(){return true},OnWakeLockReleased(){return true},
+IsWakeLockActive(){return this._isWakeLockActive},IsWakeLockSupported(){return this._supportsWakeLock}};
+
+}
+
+{
+'use strict';const C3=self.C3;C3.Plugins.PlatformInfo.Acts={RequestWakeLock(){if(!this._supportsWakeLock)return;this._PostToDOMMaybeSync("request-wake-lock")},ReleaseWakeLock(){if(!this._supportsWakeLock)return;this._isWakeLockActive=false;this.PostToDOM("release-wake-lock")}};
+
+}
+
+{
+'use strict';const C3=self.C3;
+C3.Plugins.PlatformInfo.Exps={Renderer(){let ret="";if(this._runtime.GetWebGPURenderer())ret="webgpu";else ret="webgl"+this._runtime.GetWebGLRenderer().GetWebGLVersionNumber();if(this._runtime.GetRenderer().HasMajorPerformanceCaveat())ret+="-software";return ret},RendererDetail(){return this._runtime.GetWebGLRenderer().GetUnmaskedRenderer()},DevicePixelRatio(){return self.devicePixelRatio},ScreenWidth(){return this._screenWidth},ScreenHeight(){return this._screenHeight},WindowInnerWidth(){return this._runtime.GetCanvasManager().GetLastWidth()},
+WindowInnerHeight(){return this._runtime.GetCanvasManager().GetLastHeight()},WindowOuterWidth(){return this._windowOuterWidth},WindowOuterHeight(){return this._windowOuterHeight},CanvasCssWidth(){return this._runtime.GetCanvasManager().GetCssWidth()},CanvasCssHeight(){return this._runtime.GetCanvasManager().GetCssHeight()},CanvasDeviceWidth(){return this._runtime.GetCanvasManager().GetDeviceWidth()},CanvasDeviceHeight(){return this._runtime.GetCanvasManager().GetDeviceHeight()},Downlink(){if(navigator.connection)return navigator.connection["downlink"]||
+0;else return 0},DownlinkMax(){if(navigator.connection)return navigator.connection["downlinkMax"]||0;else return 0},ConnectionType(){if(navigator.connection)return navigator.connection["type"]||"unknown";else return"unknown"},ConnectionEffectiveType(){if(navigator.connection)return navigator.connection["effectiveType"]||"unknown";else return"unknown"},ConnectionRTT(){if(navigator.connection)return navigator.connection["rtt"]||0;else return 0},HardwareConcurrency(){return navigator.hardwareConcurrency||
+0},DeviceMemory(){return navigator.deviceMemory||0},SafeAreaInsetTop(){return this._safeAreaInset[0]},SafeAreaInsetRight(){return this._safeAreaInset[1]},SafeAreaInsetBottom(){return this._safeAreaInset[2]},SafeAreaInsetLeft(){return this._safeAreaInset[3]}};
+
+}
+
+{
 'use strict';const C3=self.C3;C3.Plugins.Text=class TextPlugin extends C3.SDKPluginBase{constructor(opts){super(opts)}Release(){super.Release()}};
 
 }
@@ -3945,17 +3986,30 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.SpeechSynthesis,
 		C3.Plugins.Touch,
 		C3.Plugins.LocalStorage,
+		C3.Plugins.PlatformInfo,
 		C3.Behaviors.Sin,
 		C3.Plugins.Text,
 		C3.Behaviors.Pin,
 		C3.Plugins.System.Cnds.IsGroupActive,
+		C3.Plugins.SpeechRecognition.Cnds.IsRecognisingSpeech,
+		C3.Plugins.System.Cnds.TriggerOnce,
+		C3.Plugins.Sprite.Acts.SetAnim,
+		C3.Plugins.Touch.Cnds.OnTouchObject,
+		C3.Plugins.System.Acts.SetVar,
+		C3.Plugins.System.Acts.SetBoolVar,
+		C3.Plugins.Text.Acts.SetVisible,
+		C3.Plugins.System.Acts.GoToLayout,
+		C3.Plugins.System.Cnds.CompareBoolVar,
+		C3.Plugins.Audio.Acts.Play,
+		C3.Plugins.Sprite.Cnds.IsOnLayer,
+		C3.Plugins.Sprite.Cnds.IsVisible,
+		C3.Plugins.System.Cnds.LayerVisible,
+		C3.Plugins.Sprite.Acts.SetVisible,
+		C3.Plugins.System.Acts.RestartLayout,
 		C3.Plugins.System.Cnds.OnLayoutStart,
 		C3.Plugins.SpeechRecognition.Acts.StopSpeechRecognition,
 		C3.Plugins.Text.Acts.SetText,
 		C3.Behaviors.Physics.Acts.SetWorldGravity,
-		C3.Plugins.Touch.Cnds.OnTapGestureObject,
-		C3.Plugins.SpeechRecognition.Cnds.IsRecognisingSpeech,
-		C3.Plugins.System.Cnds.CompareBoolVar,
 		C3.Plugins.SpeechRecognition.Acts.RequestSpeechRecognition,
 		C3.Plugins.SpeechRecognition.Exps.InterimTranscript,
 		C3.Plugins.Touch.Cnds.IsInTouch,
@@ -3965,7 +4019,6 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.System.Exps.random,
 		C3.Plugins.Sprite.Cnds.OnDestroyed,
 		C3.Plugins.System.Acts.AddVar,
-		C3.Plugins.System.Acts.SetVar,
 		C3.Plugins.System.Exps.int,
 		C3.Plugins.Sprite.Cnds.IsBoolInstanceVarSet,
 		C3.Behaviors.Physics.Acts.SetEnabled,
@@ -3982,48 +4035,45 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.System.Exps.find,
 		C3.Plugins.Text.Exps.Text,
 		C3.Plugins.Sprite.Cnds.CompareFrame,
-		C3.Plugins.System.Cnds.TriggerOnce,
 		C3.Plugins.Sprite.Acts.Destroy,
-		C3.Plugins.Audio.Acts.Play,
-		C3.Plugins.System.Cnds.EveryTick,
-		C3.Plugins.Sprite.Cnds.CompareInstanceVar,
-		C3.Plugins.Sprite.Cnds.OnCollision,
-		C3.Plugins.Audio.Acts.StopAll,
-		C3.Plugins.System.Acts.SetBoolVar,
-		C3.Plugins.Sprite.Cnds.IsOnLayer,
-		C3.Plugins.Sprite.Cnds.IsVisible,
-		C3.Plugins.System.Cnds.LayerVisible,
-		C3.Plugins.Sprite.Acts.SetVisible,
-		C3.Plugins.System.Acts.RestartLayout,
-		C3.Plugins.System.Acts.GoToLayout,
-		C3.Plugins.Sprite.Acts.SetAnim,
-		C3.Behaviors.solid.Acts.SetEnabled,
-		C3.Plugins.Text.Acts.SetVisible,
+		C3.Plugins.Audio.Acts.Stop,
 		C3.Plugins.LocalStorage.Acts.SetItem,
 		C3.Plugins.System.Acts.SetLayerVisible,
 		C3.Plugins.System.Acts.CreateObject,
 		C3.Plugins.Sprite.Acts.SetAnimSpeed,
+		C3.Plugins.System.Cnds.EveryTick,
+		C3.Plugins.Sprite.Cnds.CompareInstanceVar,
+		C3.Plugins.Sprite.Cnds.OnCollision,
+		C3.Plugins.Audio.Acts.StopAll,
+		C3.Behaviors.solid.Acts.SetEnabled,
+		C3.Plugins.System.Acts.SetTimescale,
+		C3.Plugins.SpeechSynthesis.Acts.StopSpeaking,
+		C3.Plugins.System.Acts.SetGroupActive,
+		C3.Plugins.Sprite.Acts.ToggleBoolInstanceVar,
 		C3.Plugins.LocalStorage.Acts.CheckItemExists,
 		C3.Plugins.LocalStorage.Cnds.OnItemExists,
 		C3.Plugins.LocalStorage.Exps.ItemValue,
-		C3.Plugins.Sprite.Acts.ZMoveToObject,
 		C3.Plugins.SpeechRecognition.Cnds.SupportsSpeechRecognition,
 		C3.Plugins.Touch.Cnds.OnTouchStart,
 		C3.Plugins.Browser.Cnds.IsFullscreen,
+		C3.Plugins.PlatformInfo.Cnds.IsOnMobile,
 		C3.Plugins.Browser.Acts.RequestFullScreen,
+		C3.Plugins.Sprite.Acts.ZMoveToObject,
 		C3.Plugins.System.Cnds.OnLoadFinished,
 		C3.Plugins.Audio.Cnds.IsTagPlaying,
 		C3.Plugins.System.Acts.ToggleBoolVar,
-		C3.Plugins.SpeechSynthesis.Acts.StopSpeaking,
 		C3.Plugins.SpeechSynthesis.Acts.SpeakText,
 		C3.Plugins.System.Cnds.CompareVar,
+		C3.Plugins.System.Acts.SubVar,
+		C3.Plugins.Touch.Cnds.OnTapGesture,
 		C3.Behaviors.Pin.Acts.PinByProperties,
 		C3.Plugins.Sprite.Cnds.CompareX,
 		C3.Behaviors.DragnDrop.Acts.Drop,
 		C3.Plugins.Sprite.Acts.SetX,
 		C3.Plugins.System.Cnds.CompareBetween,
 		C3.Plugins.Sprite.Exps.X,
-		C3.Behaviors.DragnDrop.Cnds.OnDrop
+		C3.Behaviors.DragnDrop.Cnds.OnDrop,
+		C3.Plugins.Touch.Cnds.OnTapGestureObject
 	];
 };
 self.C3_JsPropNameTable = [
@@ -4060,12 +4110,22 @@ self.C3_JsPropNameTable = [
 	{Physics: 0},
 	{Deadline: 0},
 	{UnlockBG: 0},
+	{Medal: 0},
+	{Direction: 0},
+	{arrow: 0},
+	{ButtonSettings: 0},
+	{check: 0},
+	{Setting: 0},
+	{On: 0},
+	{Toggle: 0},
 	{Audio: 0},
 	{Browser: 0},
 	{SpeechRecognition: 0},
 	{SpeechSynthesis: 0},
 	{Touch: 0},
 	{LocalStorage: 0},
+	{PlatformInfo: 0},
+	{OpenMoji: 0},
 	{Sine: 0},
 	{ButtonPlay: 0},
 	{ButtonRecord: 0},
@@ -4080,8 +4140,11 @@ self.C3_JsPropNameTable = [
 	{TextSpeech: 0},
 	{HighScoreText: 0},
 	{FlashingHighScore: 0},
-	{Medal: 0},
 	{TextLanguage: 0},
+	{TextLicense: 0},
+	{TextMSD: 0},
+	{TextSettings: 0},
+	{TextSettingsHideWords: 0},
 	{Pin: 0},
 	{Food: 0},
 	{UIFood: 0},
@@ -4092,11 +4155,16 @@ self.C3_JsPropNameTable = [
 	{Destroyed: 0},
 	{HighScore: 0},
 	{CurrentFood: 0},
+	{NextCategory: 0},
+	{NextFood: 0},
 	{Started: 0},
 	{FoodStatus: 0},
 	{FoodStatus2: 0},
 	{FrameCounter: 0},
 	{SlowSpeech: 0},
+	{StudySoundFX: 0},
+	{EnglishTranslation: 0},
+	{ShowWords: 0},
 	{RandomFoodPicker: 0},
 	{Speech: 0},
 	{Category: 0},
@@ -4213,9 +4281,18 @@ function or(l, r)
 }
 
 self.C3_ExpressionFuncs = [
+		() => "Play UI",
+		() => "Listening",
+		() => "TapToSpeak",
+		() => 0,
+		() => 2,
+		() => 3,
+		() => -15,
+		() => "bite",
+		() => 1,
+		() => "correct",
 		() => "Speech",
 		() => "Tap to Speak",
-		() => 3,
 		() => "",
 		() => "pt-BR",
 		p => {
@@ -4227,7 +4304,6 @@ self.C3_ExpressionFuncs = [
 			const v0 = p._GetNode(0).GetVar();
 			return () => v0.GetValue();
 		},
-		() => 0,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0(40, 440);
@@ -4236,7 +4312,6 @@ self.C3_ExpressionFuncs = [
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0(100, 130);
 		},
-		() => 1,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
@@ -4250,7 +4325,7 @@ self.C3_ExpressionFuncs = [
 		() => 100,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => f0(0, 1, 2, 3, 4, 5, 6, 7, 8);
+			return () => f0(0, 1, 2, 3, 4, 5, 6, 7);
 		},
 		() => 0.2,
 		p => {
@@ -4263,20 +4338,36 @@ self.C3_ExpressionFuncs = [
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => f0(0, 1, 2, 3, 4, 5, 6, 7);
+			return () => f0(0, 1, 2, 3, 4, 5, 6, 7, 8);
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0(0, 1, 2, 3, 4, 5, 6);
 		},
-		() => "Fruit 1",
+		() => "Food",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpObject(), "era");
+		},
+		() => -1,
+		() => 5,
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpObject(), "roman");
+		},
+		() => 8,
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpObject(), "cocô");
+		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "maçã");
 		},
-		() => -1,
-		() => "correct",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
@@ -4287,7 +4378,6 @@ self.C3_ExpressionFuncs = [
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "banana");
 		},
-		() => 2,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
@@ -4303,12 +4393,6 @@ self.C3_ExpressionFuncs = [
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "pera");
-		},
-		() => 5,
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const n1 = p._GetNode(1);
-			return () => f0(n1.ExpObject(), "era");
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -4327,14 +4411,12 @@ self.C3_ExpressionFuncs = [
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "manga");
 		},
-		() => 8,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "uvas");
 		},
 		() => 9,
-		() => "Fruit 2",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
@@ -4349,11 +4431,6 @@ self.C3_ExpressionFuncs = [
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "coco");
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const n1 = p._GetNode(1);
-			return () => f0(n1.ExpObject(), "cocô");
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -4388,11 +4465,6 @@ self.C3_ExpressionFuncs = [
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
-			return () => f0(n1.ExpObject(), "roman");
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "framboesa");
 		},
 		p => {
@@ -4401,7 +4473,6 @@ self.C3_ExpressionFuncs = [
 			return () => f0(n1.ExpObject(), "tomate");
 		},
 		() => 10,
-		() => "Veggies 1",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
@@ -4437,7 +4508,6 @@ self.C3_ExpressionFuncs = [
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "pimenta");
 		},
-		() => "Veggies 2",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
@@ -4473,7 +4543,6 @@ self.C3_ExpressionFuncs = [
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "inhame");
 		},
-		() => "Meat",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
@@ -4514,7 +4583,6 @@ self.C3_ExpressionFuncs = [
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "coelho");
 		},
-		() => "Seafood",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
@@ -4555,7 +4623,6 @@ self.C3_ExpressionFuncs = [
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "tartaruga");
 		},
-		() => "Drinks",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
@@ -4606,7 +4673,6 @@ self.C3_ExpressionFuncs = [
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "vinho");
 		},
-		() => "Breakfast",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
@@ -4630,7 +4696,7 @@ self.C3_ExpressionFuncs = [
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
-			return () => f0(n1.ExpObject(), "bagel");
+			return () => f0(n1.ExpObject(), "queijo");
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -4647,12 +4713,6 @@ self.C3_ExpressionFuncs = [
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "mel");
 		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const n1 = p._GetNode(1);
-			return () => f0(n1.ExpObject(), "queijo");
-		},
-		() => "Snacks",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
@@ -4698,7 +4758,6 @@ self.C3_ExpressionFuncs = [
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), "sushi");
 		},
-		() => "Sweets",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
@@ -4753,35 +4812,30 @@ self.C3_ExpressionFuncs = [
 			const v0 = p._GetNode(0).GetVar();
 			return () => (v0.GetValue() + 1);
 		},
-		p => {
-			const v0 = p._GetNode(0).GetVar();
-			return () => and("Score: ", v0.GetValue());
-		},
-		() => "Top",
-		() => -15,
-		() => "You scored:",
-		() => "back",
-		() => "Listening",
-		() => "TapToSpeak",
-		() => 15,
 		() => "High Score",
 		() => "Your Score:",
-		() => 3.5,
+		() => 2.5,
 		() => "Fruit1",
-		() => "HSFruit1",
+		() => "ptBR_HSFruit1",
 		() => "Fruit2",
-		() => "HSFruit2",
+		() => "ptBR_HSFruit2",
 		() => "Veggies1",
-		() => "HSVeggies1",
+		() => "ptBR_HSVeggies1",
 		() => "Veggies2",
-		() => "HSVeggies2",
-		() => "HSMeat",
-		() => "HSSeafood",
-		() => "HSDrinks",
-		() => "HSBreakfast",
-		() => "HSSnacks",
-		() => "HSSweets",
-		() => "HSRandom",
+		() => "ptBR_HSVeggies2",
+		() => "Meat",
+		() => "ptBR_HSMeat",
+		() => "Seafood",
+		() => "ptBR_HSSeafood",
+		() => "Drinks",
+		() => "ptBR_HSDrinks",
+		() => "Breakfast",
+		() => "ptBR_HSBreakfast",
+		() => "Snacks",
+		() => "ptBR_HSSnacks",
+		() => "Sweets",
+		() => "ptBR_HSSweets",
+		() => "ptBR_HSRandom",
 		() => "Unlockable",
 		() => 9999,
 		() => "ptBR_LevelUnlock",
@@ -4789,8 +4843,11 @@ self.C3_ExpressionFuncs = [
 		() => 240,
 		() => 420,
 		() => 128,
+		() => "Fruit 2",
 		() => "You've unlocked\n\n[b]Veggies 1[/b]",
+		() => "Veggies 1",
 		() => "You've unlocked\n\n[b]Veggies 2[/b]",
+		() => "Veggies 2",
 		() => "You've unlocked\n\n[b]Meat[/b]",
 		() => "You've unlocked\n\n[b]Seafood[/b]",
 		() => "You've unlocked\n\n[b]Drinks[/b]",
@@ -4798,18 +4855,23 @@ self.C3_ExpressionFuncs = [
 		() => "You've unlocked\n\n[b]Snacks[/b]",
 		() => 11,
 		() => "You've unlocked all levels!\n\n[b]Congratulations![/b]",
-		() => "ptBR_HSFruit1",
-		() => "ptBR_HSFruit2",
-		() => "ptBR_HSVeggies1",
-		() => "ptBR_HSVeggies2",
-		() => "ptBR_HSMeat",
-		() => "ptBR_HSSeafood",
-		() => "ptBR_HSDrinks",
-		() => "ptBR_HSBreakfast",
-		() => "ptBR_HSSnacks",
-		() => "ptBR_HSSweets",
-		() => "ptBR_HSRandom",
+		() => "Dead",
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			return () => and("Score: ", v0.GetValue());
+		},
+		() => "Top",
+		() => "You scored:",
+		() => 15,
+		() => "Settings3",
+		() => "switch",
+		() => "StudyEnglish",
+		() => "StudySound",
+		() => "StudyTap",
+		() => -5,
 		() => "Local Storage",
+		() => "Title UI",
+		() => "Title Food",
 		() => 1.3,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -4819,15 +4881,45 @@ self.C3_ExpressionFuncs = [
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0(180, 200);
 		},
-		() => "error",
-		() => "Language Specific Bugs",
-		() => "coco",
-		() => "romã",
-		() => "pera",
-		() => "Speech7",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("Fruit1", "Fruit2");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("Fruit1", "Fruit2", "Veggies1");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("Fruit1", "Fruit2", "Veggies1", "Veggies2");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("Fruit1", "Fruit2", "Veggies1", "Veggies2", "Meat");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("Fruit1", "Fruit2", "Veggies1", "Veggies2", "Meat", "Seafood");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("Fruit1", "Fruit2", "Veggies1", "Veggies2", "Meat", "Seafood", "Drinks");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("Fruit1", "Fruit2", "Veggies1", "Veggies2", "Meat", "Seafood", "Drinks", "Breakfast");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("Fruit1", "Fruit2", "Veggies1", "Veggies2", "Meat", "Seafood", "Drinks", "Breakfast", "Snacks");
+		},
+		() => "Speech Recognition",
 		() => 430,
 		() => 150,
+		() => "Settings",
 		() => "UI",
+		() => "Speech7",
+		() => 0.1,
 		() => "Animation Picker2",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -4835,12 +4927,10 @@ self.C3_ExpressionFuncs = [
 			const v2 = p._GetNode(2).GetVar();
 			return () => f0(n1.ExpObject(), v2.GetValue());
 		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const v1 = p._GetNode(1).GetVar();
-			return () => Math.round(f0(0, v1.GetValue()));
-		},
-		() => "Fruit-1",
+		() => "Skip",
+		() => "Back",
+		() => "Fruit 1",
+		() => "Food Status",
 		() => "maçã",
 		() => "apple",
 		() => "laranja",
@@ -4850,6 +4940,7 @@ self.C3_ExpressionFuncs = [
 		() => "strawberry",
 		() => "mirtilo",
 		() => "blueberry",
+		() => "pera",
 		() => "pear",
 		() => "pêssego",
 		() => "peach",
@@ -4859,11 +4950,11 @@ self.C3_ExpressionFuncs = [
 		() => "mango",
 		() => "uvas",
 		() => "grapes",
-		() => "Fruit-2",
 		() => "melão",
 		() => "melon",
 		() => "limão",
 		() => "lemon",
+		() => "coco",
 		() => "coconut",
 		() => "cereja",
 		() => "cherry",
@@ -4874,12 +4965,12 @@ self.C3_ExpressionFuncs = [
 		() => "olive",
 		() => "abacaxi",
 		() => "pineapple",
+		() => "romã",
 		() => "pomegranate",
 		() => "framboesa",
 		() => "raspberry",
 		() => "tomate",
 		() => "tomato",
-		() => "Veggies-1",
 		() => "brócolis",
 		() => "broccoli",
 		() => "cenoura",
@@ -4894,9 +4985,9 @@ self.C3_ExpressionFuncs = [
 		() => "potato",
 		() => "pimenta",
 		() => "pepper",
-		() => "Veggies-2",
 		() => "cogumelo",
 		() => "mushroom",
+		() => "garlic",
 		() => "beringela",
 		() => "eggplant",
 		() => "cacto",
@@ -4909,45 +5000,6 @@ self.C3_ExpressionFuncs = [
 		() => "rice",
 		() => "inhame",
 		() => "yam",
-		() => "Breakfast-1",
-		() => "waffles.",
-		() => "waffles",
-		() => "panquecas",
-		() => "pancakes",
-		() => "bacon",
-		() => "manteiga",
-		() => "butter",
-		() => "bagel",
-		() => "ovo",
-		() => "egg",
-		() => "pão",
-		() => "bread",
-		() => "mel",
-		() => "honey",
-		() => "queijo",
-		() => "cheese",
-		() => "Drinks-1",
-		() => "suco",
-		() => "juice",
-		() => "cerveja",
-		() => "beer",
-		() => "champanhe",
-		() => "champagne",
-		() => "coquetel",
-		() => "cocktail",
-		() => "café",
-		() => "coffee",
-		() => "leite",
-		() => "milk",
-		() => "refrigerante",
-		() => "soda",
-		() => "chá",
-		() => "tea",
-		() => "agua",
-		() => "water",
-		() => "vinho",
-		() => "wine",
-		() => "Meat-1",
 		() => "bife",
 		() => "beef",
 		() => "porco",
@@ -4964,7 +5016,6 @@ self.C3_ExpressionFuncs = [
 		() => "lamb",
 		() => "coelho",
 		() => "rabbit",
-		() => "Seafood-1",
 		() => "peixe",
 		() => "fish",
 		() => "camarão",
@@ -4981,7 +5032,40 @@ self.C3_ExpressionFuncs = [
 		() => "squid",
 		() => "tartaruga",
 		() => "turtle",
-		() => "Snacks-1",
+		() => "suco",
+		() => "juice",
+		() => "cerveja",
+		() => "beer",
+		() => "champanhe",
+		() => "champagne",
+		() => "coquetel",
+		() => "cocktail",
+		() => "café",
+		() => "coffee",
+		() => "leite",
+		() => "milk",
+		() => "refrigerante",
+		() => "soda",
+		() => "chá",
+		() => "green tea",
+		() => "agua",
+		() => "water",
+		() => "vinho",
+		() => "wine",
+		() => "waffles",
+		() => "panquecas",
+		() => "pancakes",
+		() => "bacon",
+		() => "manteiga",
+		() => "butter",
+		() => "queijo",
+		() => "cheese",
+		() => "ovo",
+		() => "egg",
+		() => "pão",
+		() => "bread",
+		() => "mel",
+		() => "honey",
 		() => "hamburguer",
 		() => "hamburger",
 		() => "batatas fritas",
@@ -4997,7 +5081,6 @@ self.C3_ExpressionFuncs = [
 		() => "sanduíche",
 		() => "sandwich",
 		() => "sushi",
-		() => "Sweets-1",
 		() => "rosquinha",
 		() => "donut",
 		() => "bolinho",
@@ -5015,6 +5098,8 @@ self.C3_ExpressionFuncs = [
 		() => "cookie",
 		() => "torta",
 		() => "pie",
+		() => "Food Destroyer",
+		() => "Slider",
 		() => -1650,
 		p => {
 			const n0 = p._GetNode(0);
@@ -5055,6 +5140,7 @@ self.C3_ExpressionFuncs = [
 		() => -1485,
 		() => -1732,
 		() => -1568,
+		() => "Buttons",
 		() => "Unlockables",
 		() => "Swipe to select a category.",
 		() => "Score 10,000 points on [b]Fruit 1[/b]\nto unlock the next level",
@@ -5067,7 +5153,8 @@ self.C3_ExpressionFuncs = [
 		() => "Score 10,000 points on [b]Drinks[/b]\nto unlock the next level.",
 		() => "Score 10,000 points on [b]Breakfast[/b]\nto unlock the next level.",
 		() => "Score 10,000 points on [b]Snacks[/b]\n to unlock the next level.",
-		() => "Score 10,000 points on [b]Sweets[/b]\n to unlock the next level."
+		() => "Score 10,000 points on [b]Sweets[/b]\n to unlock the next level.",
+		() => "Settings2"
 ];
 
 
