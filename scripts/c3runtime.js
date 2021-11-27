@@ -3641,57 +3641,6 @@ SetEffect(effect){this.GetWorldInfo().SetBlendMode(effect);this._runtime.UpdateR
 }
 
 {
-'use strict';const C3=self.C3;C3.Plugins.googleplay=class GooglePlayPlugin extends C3.SDKPluginBase{constructor(opts){super(opts)}Release(){super.Release()}};
-
-}
-
-{
-'use strict';const C3=self.C3;C3.Plugins.googleplay.Type=class GooglePlayType extends C3.SDKTypeBase{constructor(objectClass){super(objectClass)}Release(){super.Release()}OnCreate(){}};
-
-}
-
-{
-'use strict';const C3=self.C3;const DOM_COMPONENT_ID="googleplay";
-C3.Plugins.googleplay.Instance=class GooglePlayInstance extends C3.SDKInstanceBase{constructor(inst,properties){super(inst,DOM_COMPONENT_ID);this.isLoaded=false;this.fireLoadedFirstTick=false;this.isSignedIn=false;this.lastError="";this.my_playerid="";this.my_displayname="";this.my_avatarurl="";this.my_givenname="";this.my_familyname="";this.hiscores_total=0;this.hiscores_mybest=0;this.hiscores_myformattedbest="";this.hiscores_mybesttag="";this.hiscores_myrank=0;this.hiscores_myformattedrank="";this.hiscores_page=
-null;this.achievements_page=null;this.achievements_by_id=new Map;this.achievement_trigger_id="";this._runtime.AddLoadPromise(this.PostToDOMAsync("load",[properties[1]]).then(()=>{this.isLoaded=true},e=>{console.warn("failed to load Google Play",e)}));this.AddDOMMessageHandler("login",e=>{const state=e["state"];const error=e["error"];if(this.isSignedIn!=state){this.isSignedIn=state;if(state)this.Trigger(C3.Plugins.googleplay.Cnds.OnSignedIn);else this.Trigger(C3.Plugins.googleplay.Cnds.OnSignedOut)}if(error){this.lastError=
-error;this.Trigger(C3.Plugins.googleplay.Cnds.OnSignInFail)}})}GetAchievementAt(i){if(!this.achievements_page)return null;i=Math.floor(i);if(i<0||i>=this.achievements_page.length)return null;return this.achievements_page[i]}GetAchievementMetadataAt(i){const a=this.GetAchievementAt(i);if(!a)return null;const id=a["id"];if(!this.achievements_by_id.has(id))return null;return this.achievements_by_id.get(id)}GetScoreAt(i){if(!this.hiscores_page)return null;i=Math.floor(i);if(i<0||i>=this.hiscores_page.length)return null;
-return this.hiscores_page[i]}Release(){super.Release()}};
-
-}
-
-{
-'use strict';const C3=self.C3;
-C3.Plugins.googleplay.Cnds={OnLoaded(){return true},IsLoaded(){return this.isLoaded},OnSignedIn(){return true},OnSignedOut(){return true},IsSignedIn(){return this.isSignedIn},OnError(){return true},OnPlayerDetails(){return true},OnAutoSignInFailed(){return true},OnSignInFail(){return true},OnScoreSubmitSuccess(){return true},OnScoreSubmitFail(){return true},OnHiScoreRequestSuccess(){return true},OnHiScoreRequestFail(){return true},OnAchievementsRequestSuccess(){return true},OnAchievementsRequestFail(){return true},
-CompareAchievementState(i,s){const a=this.GetAchievementAt(i);if(!a)return false;const str=a["achievementState"];return str===["HIDDEN","REVEALED","UNLOCKED"][s]},OnAchievementsMetadataSuccess(){return true},OnAchievementsMetadataFail(){return true},OnAchievementRevealed(id){return this.achievement_trigger_id===id},OnAchievementUnlocked(id){return this.achievement_trigger_id===id}};
-
-}
-
-{
-'use strict';const C3=self.C3;
-C3.Plugins.googleplay.Acts={SignIn(){this._PostToDOMMaybeSync("signin")},SignOut(){this._PostToDOMMaybeSync("signout")},async RequestPlayerDetails(){try{const result=await this.PostToDOMAsync("getplayer");if(result){this.my_playerid=result["id"];this.my_displayname=result["display"];this.my_avatarurl=result["avatar"];this.my_givenname=result["givenName"];this.my_familyname=result["familyName"];this.Trigger(C3.Plugins.googleplay.Cnds.OnPlayerDetails)}}catch(e){this.lastError=e.message;this.Trigger(C3.Plugins.googleplay.Cnds.OnError)}},
-async SubmitScore(leaderboardId,score,tag){leaderboardId=leaderboardId.trim();try{await this.PostToDOMAsync("submitscore",{"leaderboardId":leaderboardId.trim(),"score":score,"tag":tag});this.Trigger(C3.Plugins.googleplay.Cnds.OnScoreSubmitSuccess)}catch(e){this.lastError=e.message;this.Trigger(C3.Plugins.googleplay.Cnds.OnScoreSubmitFail)}},async RequestHiScores(leaderboardId,collection,timespan,maxresults,type,forceReload){collection=["PUBLIC","SOCIAL"][collection];timespan=["ALL_TIME","WEEKLY",
-"DAILY"][timespan];type=["scores","window"][type];leaderboardId=leaderboardId.trim();try{const result=await this.PostToDOMAsync("requestscores",{"leaderboardId":leaderboardId,"collection":collection,"timeSpan":timespan,"maxResults":maxresults,"reload":forceReload,"type":type});if(result){this.hiscores_total=result["total"];this.hiscores_mybest=result["best"];this.hiscores_myformattedbest=result["formattedbest"];this.hiscores_mybesttag=result["besttag"];this.hiscores_myrank=result["rank"];this.hiscores_myformattedrank=
-result["formattedrank"];this.hiscores_page=result["page"];this.Trigger(C3.Plugins.googleplay.Cnds.OnHiScoreRequestSuccess)}}catch(e){this.lastError=e.message;this.Trigger(C3.Plugins.googleplay.Cnds.OnHiScoreRequestFail)}},async RequestAchievements(which,forceReload){try{which=["ALL","HIDDEN","REVEALED","UNLOCKED"][which];const result=await this.PostToDOMAsync("requestachievements",{"which":which,"reload":forceReload});this.achievements_page=result["page"];if(result["id"])this.achievements_by_id=result["id"];
-this.Trigger(C3.Plugins.googleplay.Cnds.OnAchievementsRequestSuccess)}catch(e){this.lastError=e.message;this.Trigger(C3.Plugins.googleplay.Cnds.OnAchievementsRequestFail)}},async RequestAchievementMetadata(forceReload){try{const result=await this.PostToDOMAsync("requestmetadata",{"reload":forceReload});if(result){this.achievements_by_id=result["id"];if(result["page"])this.achievements_page=result["page"];this.Trigger(C3.Plugins.googleplay.Cnds.OnAchievementsMetadataSuccess)}}catch(e){this.lastError=
-e.message;this.Trigger(C3.Plugins.googleplay.Cnds.OnAchievementsMetadataFail)}},async RevealAchievement(id){id=id.trim();try{const res=await this.PostToDOMAsync("reveal",{"id":id});if(res){const ach=this.achievements_by_id.get(id);if(ach&&ach["achievementState"]=="HIDDEN"){ach["achievementState"]="REVEALED";this.achievement_trigger_id=id;this.Trigger(C3.Plugins.googleplay.Cnds.OnAchievementRevealed)}}}catch(e){this.lastError=e.message;this.Trigger(C3.Plugins.googleplay.Cnds.OnError)}},async UnlockAchievement(id){id=
-id.trim();try{const res=await this.PostToDOMAsync("unlock",{"id":id});if(res){const ach=this.achievements_by_id.get(id);if(ach&&ach["achievementState"]!="UNLOCKED"){ach["achievementState"]="UNLOCKED";this.achievement_trigger_id=id;this.Trigger(C3.Plugins.googleplay.Cnds.OnAchievementUnlocked)}}}catch(e){this.lastError=e.message;this.Trigger(C3.Plugins.googleplay.Cnds.OnError)}},async IncrementAchievement(id,steps){id=id.trim();try{const res=await this.PostToDOMAsync("increment",{"id":id,"steps":steps});
-if(res){const ach=this.achievements_by_id.get(id);if(ach&&ach["achievementState"]!="UNLOCKED"){ach["currentSteps"]+=steps;if(ach["currentSteps"]>=ach["totalSteps"]){this.achievement_trigger_id=id;ach["currentSteps"]=ach["totalSteps"];ach["achievementState"]="UNLOCKED";this.Trigger(C3.Plugins.googleplay.Cnds.OnAchievementUnlocked)}}}}catch(e){this.lastError=e.message;this.Trigger(C3.Plugins.googleplay.Cnds.OnError)}},async SetStepsAchievement(id,steps){id=id.trim();try{const res=await this.PostToDOMAsync("setsteps",
-{"id":id,"steps":steps});if(res){const ach=this.achievements_by_id.get(id);if(ach&&ach["achievementState"]!="UNLOCKED"){ach["currentSteps"]=steps;if(steps>=ach["totalSteps"]){this.achievement_trigger_id=id;ach["currentSteps"]=ach["totalSteps"];ach["achievementState"]="UNLOCKED";this.Trigger(C3.Plugins.googleplay.Cnds.OnAchievementUnlocked)}}}}catch(e){this.lastError=e.message;this.Trigger(C3.Plugins.googleplay.Cnds.OnError)}},async ShowLeaderboards(){try{const id=null;await this.PostToDOMAsync("showleaderboard",
-{"id":id})}catch(e){this.lastError=e.message;this.Trigger(C3.Plugins.googleplay.Cnds.OnError)}},async ShowLeaderboard(id){id=id.trim();try{await this.PostToDOMAsync("showleaderboard",{"id":id})}catch(e){this.lastError=e.message;this.Trigger(C3.Plugins.googleplay.Cnds.OnError)}},async ShowAchievements(){try{await this.PostToDOMAsync("showachievements")}catch(e){this.lastError=e.message;this.Trigger(C3.Plugins.googleplay.Cnds.OnError)}}};
-
-}
-
-{
-'use strict';const C3=self.C3;
-C3.Plugins.googleplay.Exps={ErrorMessage(){return this.lastError},MyID(){return this.my_playerid},MyDisplayName(){return this.my_displayname},MyAvatarUrl(){return this.my_avatarurl},MyGivenName(){return this.my_givenname},MyFamilyName(){return this.my_familyname},HiScoreTotalCount(){return this.hiscores_total},HiScoreMyBest(){return this.hiscores_mybest},HiScoreMyBestTag(){return this.hiscores_mybesttag},HiScoreMyFormattedBest(){return this.hiscores_myformattedbest},HiScoreMyBestRank(){return this.hiscores_myrank},
-HiScoreMyBestFormattedRank(){return this.hiscores_myformattedrank},HiScoreCount(){return this.hiscores_page?this.hiscores_page.length||0:0},HiScoreNameAt(i){const s=this.GetScoreAt(i);return s&&s["player"]?s["player"]["displayName"]||"":""},HiScoreRankAt(i){const s=this.GetScoreAt(i);return s?parseInt(s["scoreRank"],10)||0:0},HiScoreAt(i){const s=this.GetScoreAt(i);return s?parseInt(s["scoreValue"],10)||0:0},HiScoreTagAt(i){const s=this.GetScoreAt(i);return s&&s["scoreTag"]?s["scoreTag"]||"":""},
-HiScoreFormattedAt(i){const s=this.GetScoreAt(i);return s&&s["formattedScore"]?s["formattedScore"]||"":""},HiScoreFormattedRankAt(i){const s=this.GetScoreAt(i);return s&&s["formattedScoreRank"]?s["formattedScoreRank"]||"":""},AchievementsCount(){return this.achievements_page?this.achievements_page.length||0:0},AchievementIDAt(i){const a=this.GetAchievementAt(i);return a?a["id"]||"":""},AchievementStepsAt(i){const a=this.GetAchievementAt(i);return a?a["currentSteps"]||0:0},AchievementNameAt(i){const a=
-this.GetAchievementMetadataAt(i);return a?a["name"]||"":""},AchievementDescriptionAt(i){const a=this.GetAchievementMetadataAt(i);return a?a["description"]||"":""},AchievementTypeAt(i){const a=this.GetAchievementMetadataAt(i);return a?(a["type"]||"").toLowerCase():""},AchievementTotalStepsAt(i){const a=this.GetAchievementMetadataAt(i);return a?a["totalSteps"]||0:0},AchievementRevealedIconURLAt(i){const a=this.GetAchievementMetadataAt(i);return a?a["revealedUrl"]||"":""},AchievementUnlockedIconURLAt(i){const a=
-this.GetAchievementMetadataAt(i);return a?a["unlockedUrl"]||"":""}};
-
-}
-
-{
 'use strict';const C3=self.C3;C3.Plugins.advert=class MobileAdvertPlugin extends C3.SDKPluginBase{constructor(opts){super(opts)}Release(){super.Release()}};
 
 }
@@ -4095,7 +4044,6 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.PlatformInfo,
 		C3.Behaviors.Sin,
 		C3.Plugins.Text,
-		C3.Plugins.googleplay,
 		C3.Plugins.advert,
 		C3.Behaviors.Pin,
 		C3.Plugins.System.Cnds.IsGroupActive,
@@ -4158,6 +4106,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.SpeechSynthesis.Acts.StopSpeaking,
 		C3.Plugins.System.Acts.SetGroupActive,
 		C3.Plugins.Sprite.Acts.ToggleBoolInstanceVar,
+		C3.Plugins.advert.Acts.HideBanner,
 		C3.Plugins.LocalStorage.Acts.CheckItemExists,
 		C3.Plugins.LocalStorage.Cnds.OnItemExists,
 		C3.Plugins.LocalStorage.Exps.ItemValue,
@@ -4182,7 +4131,8 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Sprite.Exps.X,
 		C3.Behaviors.DragnDrop.Cnds.OnDrop,
 		C3.Plugins.Touch.Cnds.OnTapGestureObject,
-		C3.Plugins.advert.Acts.CreateBanner
+		C3.Plugins.advert.Acts.CreateBanner,
+		C3.Plugins.advert.Acts.ShowBanner
 	];
 };
 self.C3_JsPropNameTable = [
@@ -4254,7 +4204,6 @@ self.C3_JsPropNameTable = [
 	{TextMSD: 0},
 	{TextSettings: 0},
 	{TextSettingsHideWords: 0},
-	{GooglePlay: 0},
 	{MobileAdvert: 0},
 	{Pin: 0},
 	{Food: 0},
@@ -5266,7 +5215,8 @@ self.C3_ExpressionFuncs = [
 		() => "Score 10,000 points on [b]Breakfast[/b]\nto unlock the next level.",
 		() => "Score 10,000 points on [b]Snacks[/b]\n to unlock the next level.",
 		() => "Score 10,000 points on [b]Sweets[/b]\n to unlock the next level.",
-		() => "Settings2"
+		() => "Settings2",
+		() => "ca-app-pub-9824907844826461/5984904015"
 ];
 
 
